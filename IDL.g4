@@ -7,21 +7,26 @@ program: statement* EOF;
 statement
     : assignment
     | functionCall
+    | procedureCall
     | loopStatement
     | conditionalStatement
-    | RETURN expression? ';'
+    | returnStatement
     | COMMENT
     | ';'
     ;
 
-assignment: VARIABLE '=' expression ';';
+returnStatement: "return" argumentList? ;
 
-functionCall: VARIABLE '(' argumentList? ')' ';';
+assignment: VARIABLE '=' expression ;
+
+functionCall: VARIABLE '(' argumentList? ')' ;
+
+procedureCall: VARIABLE ',' argumentList?  ;
 
 loopStatement
     : 'FOR' '(' assignment expression ';' expression ')' '{' statement* '}'
     | 'WHILE' '(' expression ')' '{' statement* '}'
-    | 'REPEAT' '{' statement* '}' 'UNTIL' '(' expression ')' ';'
+    | 'REPEAT' '{' statement* '}' 'UNTIL' '(' expression ')' 
     ;
 
 conditionalStatement
@@ -30,7 +35,7 @@ conditionalStatement
     ;
 
 expression
-    : expression ('+' | '-' | '*' | '/' | 'MOD' | '^') expression   # BinaryExpression
+    : expression ('+' | '-' | '*' | '/' | 'MOD' | '^') expression    # BinaryExpression
     | '-' expression                                                 # UnaryExpression
     | '(' expression ')'                                             # ParenthesizedExpression
     | functionCall                                                   # FunctionCallExpression

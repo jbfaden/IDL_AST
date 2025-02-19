@@ -5,7 +5,7 @@ public class IDLParserDemo {
     public static void main(String[] args) throws Exception {
         // Sample IDL code
         String idlCode = """
-            PRINT(x);
+            PRINT, x+2*4
             
         """;
 

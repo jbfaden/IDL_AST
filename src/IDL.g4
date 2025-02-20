@@ -5,11 +5,11 @@ options { caseInsensitive = true; }
 // Root rule
 program: ( procedure | function | statement ) * EOF;
 
-procedure : 'pro' VARIABLE ( ',' argumentDeclaration )? statementBlock 'end';
+procedure : 'pro' VARIABLE ( ',' argumentDeclaration )? NL statementBlock 'end' NL+;
  
-function: 'function' VARIABLE ( ',' argumentDeclaration )? statementBlock 'end';
+function: 'function' VARIABLE ( ',' argumentDeclaration )? NL statementBlock 'end' NL+;
 
-statementBlock : ( statement )+;
+statementBlock : ( statement NL+ )+;
    
 // Statements
 statement
@@ -23,7 +23,7 @@ statement
     | ';'
     ;
 
-returnStatement: 'return' argumentList? ;
+returnStatement: 'RETURN' argumentList? ;
 
 assignment: VARIABLE '=' expression ;
 
@@ -32,14 +32,16 @@ functionCall: VARIABLE '(' argumentList? ')' ;
 procedureCall: VARIABLE ',' argumentList?  ;
 
 loopStatement
-    : 'for' '(' assignment expression ';' expression ')' '{' statementBlock '}'
+    : 'FOR' '(' assignment expression ';' expression ')' '{' statementBlock '}'
     | 'WHILE' '(' expression ')' '{' statementBlock '}'
     | 'REPEAT' '{' statementBlock '}' 'UNTIL' '(' expression ')' 
     ;
 
 conditionalStatement
-    : 'IF' '(' expression ')' '{' statementBlock '}'
-      ('ELSE' '{' statementBlock '}')?
+    : 'IF' '(' expression ')' 'THEN' statement ( 'ELSE' statement ) 
+    | 'IF' '(' expression ')' 'THEN' 'BEGIN' NL 
+            statementBlock 
+      'ENDIF' ('ELSE' 'BEGIN' NL statementBlock 'ENDELSE')?
     ;
 
 expression
@@ -60,8 +62,9 @@ argumentList: expression (',' expression)*;
 // Tokens
 VARIABLE: [a-z_][a-z0-9_]*;
 NUMBER: [0-9]+ ('.' [0-9]+)?;
-STRING: '"' .*? '"';
+STRING: '"' .*? '"' |  '\'' .*? '\'' ;
 
 COMMENT: (';' ~[\r\n]*) -> skip;  // Skip comments
-WS: [ \t\r\n]+ -> skip;           // Ignore whitespace
+NL: [\r\n];                   // new line
+WS: [ \t]+ -> skip;           // Ignore whitespace
 

@@ -9,7 +9,7 @@ procedure : 'pro' VARIABLE ( ',' argumentDeclaration )? NL statementBlock 'end' 
  
 function: 'function' VARIABLE ( ',' argumentDeclaration )? NL statementBlock 'end' NL+;
 
-statementBlock : ( statement NL+ )+;
+statementBlock : ( statement NL | NL )+;
    
 // Statements
 statement

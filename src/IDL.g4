@@ -1,8 +1,16 @@
 grammar IDL;
 
-// Root rule
-program: statement* EOF;
+options { caseInsensitive = true; }
 
+// Root rule
+program: ( procedure | function | statement ) * EOF;
+
+procedure : 'pro' VARIABLE ( ',' argumentDeclaration )? statementBlock 'end';
+ 
+function: 'function' VARIABLE ( ',' argumentDeclaration )? statementBlock 'end';
+
+statementBlock : ( statement )+;
+   
 // Statements
 statement
     : assignment
@@ -24,14 +32,14 @@ functionCall: VARIABLE '(' argumentList? ')' ;
 procedureCall: VARIABLE ',' argumentList?  ;
 
 loopStatement
-    : 'FOR' '(' assignment expression ';' expression ')' '{' statement* '}'
-    | 'WHILE' '(' expression ')' '{' statement* '}'
-    | 'REPEAT' '{' statement* '}' 'UNTIL' '(' expression ')' 
+    : 'for' '(' assignment expression ';' expression ')' '{' statementBlock '}'
+    | 'WHILE' '(' expression ')' '{' statementBlock '}'
+    | 'REPEAT' '{' statementBlock '}' 'UNTIL' '(' expression ')' 
     ;
 
 conditionalStatement
-    : 'IF' '(' expression ')' '{' statement* '}'
-      ('ELSE' '{' statement* '}')?
+    : 'IF' '(' expression ')' '{' statementBlock '}'
+      ('ELSE' '{' statementBlock '}')?
     ;
 
 expression
@@ -42,17 +50,17 @@ expression
     | VARIABLE                                                       # VariableExpression
     | NUMBER                                                         # NumberExpression
     | STRING                                                         # StringExpression
-    | BOOLEAN                                                        # BooleanExpression
     ;
+
+argumentDeclaration: VARIABLE ( ',' VARIABLE )* ;
 
 // Function arguments
 argumentList: expression (',' expression)*;
 
 // Tokens
-VARIABLE: [a-zA-Z_][a-zA-Z0-9_]*;
+VARIABLE: [a-z_][a-z0-9_]*;
 NUMBER: [0-9]+ ('.' [0-9]+)?;
 STRING: '"' .*? '"';
-BOOLEAN: 'TRUE' | 'FALSE';
 
 COMMENT: (';' ~[\r\n]*) -> skip;  // Skip comments
 WS: [ \t\r\n]+ -> skip;           // Ignore whitespace

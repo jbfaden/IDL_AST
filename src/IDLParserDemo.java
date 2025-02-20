@@ -8,7 +8,7 @@ public class IDLParserDemo {
     public static void printTree(ParseTree tree, int level) {
         String indent = "    ".repeat(level);  // Use indentation for readability
         if (tree instanceof TerminalNode) {
-            System.out.println(indent + tree.getText().strip());
+            System.out.println(indent + tree.getText().strip() + "   (terminal node)");
         } else if (tree instanceof RuleNode) {
             if ( tree.getText().contains("\n") ) {
                 System.out.println(indent + tree.getClass().getSimpleName() + " (xxx)");
@@ -49,7 +49,5 @@ public class IDLParserDemo {
         
         printTree(tree,0);
 
-        // Print AST
-        System.out.println(tree.toStringTree(parser));
     }
 }

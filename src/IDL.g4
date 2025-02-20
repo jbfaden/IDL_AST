@@ -44,6 +44,8 @@ conditionalStatement
       'ENDIF' ('ELSE' 'BEGIN' NL statementBlock 'ENDELSE')?
     ;
 
+array : '[' expressionList ']' | '(' expressionList ')';
+    
 expression
     : expression ('+' | '-' | '*' | '/' | 'MOD' | '^') expression    # BinaryExpression
     | '-' expression                                                 # UnaryExpression
@@ -52,8 +54,11 @@ expression
     | VARIABLE                                                       # VariableExpression
     | NUMBER                                                         # NumberExpression
     | STRING                                                         # StringExpression
+    | array                                                          # ArrayDeclaration
     ;
 
+expressionList : expression ( ',' expression )* ;
+    
 argumentDeclaration: VARIABLE ( ',' VARIABLE )* ;
 
 // Function arguments

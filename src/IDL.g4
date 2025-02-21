@@ -45,6 +45,10 @@ conditionalStatement
 
 array : '[' expressionList ']' | '(' expressionList ')';
     
+slice : sliceIndex ':' sliceIndex ( ':' sliceIndex )?;
+
+sliceIndex : functionCallOrArrayAccess | arrayAccessExpr | VARIABLE | NUMBER;
+    
 expression
     : expression ('+' | '-' | '*' | '/' | 'MOD' | '^') expression    # BinaryExpression
     | '-' expression                                                 # UnaryExpression
@@ -54,6 +58,7 @@ expression
     | VARIABLE                                                       # VariableExpression
     | NUMBER                                                         # NumberExpression
     | STRING                                                         # StringExpression
+    | slice                                                          # SliceExpression
     | array                                                          # ArrayDeclaration
     ;
 

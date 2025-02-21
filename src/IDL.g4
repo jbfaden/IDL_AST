@@ -5,16 +5,15 @@ options { caseInsensitive = true; }
 // Root rule
 program: ( procedure | function | statement ) * EOF;
 
-procedure : 'pro' VARIABLE ( ',' argumentDeclaration )? NL statementBlock 'end' NL+;
+procedure : 'PRO' VARIABLE ( ',' argumentDeclaration )? NL statementBlock 'end' NL+;
  
-function: 'function' VARIABLE ( ',' argumentDeclaration )? NL statementBlock 'end' NL+;
+function: 'FUNCTION' VARIABLE ( ',' argumentDeclaration )? NL statementBlock 'end' NL+;
 
 statementBlock : ( statement NL | NL )+;
    
 // Statements
 statement
     : assignment
-    | functionCall
     | procedureCall
     | loopStatement
     | conditionalStatement
@@ -27,7 +26,7 @@ returnStatement: 'RETURN' argumentList? ;
 
 assignment: VARIABLE '=' expression ;
 
-functionCall: VARIABLE '(' argumentList? ')' ;
+functionCallOrArrayAccess: VARIABLE '(' argumentList? ')' ;
 
 procedureCall: VARIABLE ',' argumentList?  ;
 
@@ -50,7 +49,8 @@ expression
     : expression ('+' | '-' | '*' | '/' | 'MOD' | '^') expression    # BinaryExpression
     | '-' expression                                                 # UnaryExpression
     | '(' expression ')'                                             # ParenthesizedExpression
-    | functionCall                                                   # FunctionCallExpression
+    | functionCallOrArrayAccess                                      # FunctionCallExpression
+    | arrayAccessExpr                                                # ArrayAccessExpression
     | VARIABLE                                                       # VariableExpression
     | NUMBER                                                         # NumberExpression
     | STRING                                                         # StringExpression
@@ -60,6 +60,8 @@ expression
 expressionList : expression ( ',' expression )* ;
     
 argumentDeclaration: VARIABLE ( ',' VARIABLE )* ;
+
+arrayAccessExpr: VARIABLE '[' argumentList ']' | VARIABLE '(' argumentList ')';
 
 // Function arguments
 argumentList: expression (',' expression)*;

@@ -3,7 +3,7 @@ grammar IDL;
 options { caseInsensitive = true; }
 
 // Root rule
-program: ( procedure | function | statement ) * EOF;
+program: ( procedure | function | statement | NL ) * EOF;
 
 procedure : 'PRO' VARIABLE ( ',' argumentDeclaration )? NL statementBlock 'end' NL+;
  
@@ -18,6 +18,7 @@ statement
     | loopStatement
     | conditionalStatement
     | returnStatement
+    | statement '$' NL statement
     | COMMENT
     | ';'
     ;
@@ -50,7 +51,7 @@ slice : sliceIndex ':' sliceIndex ( ':' sliceIndex )?;
 sliceIndex : functionCallOrArrayAccess | arrayAccessExpr | VARIABLE | NUMBER;
     
 expression
-    : expression ('+' | '-' | '*' | '/' | 'MOD' | '^') expression    # BinaryExpression
+    : expression ('+' | '-' | '*' | '/' | 'MOD' | '^' | '#' ) expression    # BinaryExpression
     | '-' expression                                                 # UnaryExpression
     | '(' expression ')'                                             # ParenthesizedExpression
     | functionCallOrArrayAccess                                      # FunctionCallExpression

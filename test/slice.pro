@@ -1,0 +1,5 @@
+pro slice
+   a= [1,2,3,4,5]
+   print, a[2:5]
+end
+

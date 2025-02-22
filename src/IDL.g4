@@ -31,11 +31,20 @@ functionCallOrArrayAccess: VARIABLE '(' argumentList? ')' ;
 
 procedureCall: VARIABLE ',' argumentList?  ;
 
-loopStatement
-    : 'FOR' '(' assignment expression ';' expression ')' '{' statementBlock '}'
-    | 'WHILE' '(' expression ')' '{' statementBlock '}'
-    | 'REPEAT' '{' statementBlock '}' 'UNTIL' '(' expression ')' 
-    ;
+loopStatement : forStatement | whileStatement;
+    
+endfor:
+    'END' | 'ENDFOR';
+
+forStatement :
+    'FOR' VARIABLE '=' expression ',' expression 'DO' 'BEGIN' NL statementBlock endfor;
+
+endwhile:
+    'END' | 'ENDWHILE';
+
+whileStatement :
+    'WHILE' '(' expression ')' 'DO' 'BEGIN' NL statementBlock endwhile;
+
 
 conditionalStatement
     : 'IF' '(' expression ')' 'THEN' statement ( 'ELSE' statement ) 

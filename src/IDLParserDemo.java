@@ -1,3 +1,5 @@
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import org.antlr.v4.runtime.*;
@@ -30,6 +32,15 @@ public class IDLParserDemo {
             idlCode = """
                 PRINT, x+2*4
                              """;
+        } else if ( args.length==1 && args[0].equals("-") ) { // read from stdin
+            BufferedReader read= new BufferedReader( new InputStreamReader( System.in ) );
+            StringBuilder b= new StringBuilder();
+            String line= read.readLine();
+            while ( line!=null ) {
+                b.append(line).append("\n");
+                line= read.readLine();
+            }
+            idlCode= b.toString();
         } else {
             Path p = Path.of(args[0]);
             System.err.println("Reading "+p);

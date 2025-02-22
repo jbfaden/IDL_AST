@@ -25,7 +25,7 @@ statement
 
 returnStatement: 'RETURN' argumentList? ;
 
-assignment: VARIABLE '=' expression ;
+assignment: VARIABLE '=' expression | VARIABLE array '=' expression;
 
 functionCallOrArrayAccess: VARIABLE '(' argumentList? ')' ;
 
@@ -44,11 +44,15 @@ conditionalStatement
       'ENDIF' ('ELSE' 'BEGIN' NL statementBlock 'ENDELSE')?
     ;
 
-array : '[' expressionList ']' | '(' expressionList ')';
+array : '[' arrayIndexList ']' | '(' arrayIndexList ')';
+
+arrayIndexList : arrayIndex ( ',' arrayIndex )*;
+    
+arrayIndex : slice | NUMBER | VARIABLE | '*';
     
 slice : sliceIndex ':' sliceIndex ( ':' sliceIndex )?;
 
-sliceIndex : functionCallOrArrayAccess | arrayAccessExpr | VARIABLE | NUMBER;
+sliceIndex : functionCallOrArrayAccess | arrayAccessExpr | VARIABLE | NUMBER | '*';
     
 expression
     : expression ('+' | '-' | '*' | '/' | 'MOD' | '^' | '#' ) expression    # BinaryExpression
@@ -59,7 +63,6 @@ expression
     | VARIABLE                                                       # VariableExpression
     | NUMBER                                                         # NumberExpression
     | STRING                                                         # StringExpression
-    | slice                                                          # SliceExpression
     | array                                                          # ArrayDeclaration
     ;
 
@@ -67,7 +70,7 @@ expressionList : expression ( ',' expression )* ;
     
 argumentDeclaration: VARIABLE ( ',' VARIABLE )* ;
 
-arrayAccessExpr: VARIABLE '[' argumentList ']' | VARIABLE '(' argumentList ')';
+arrayAccessExpr: VARIABLE '[' arrayIndexList ']' | VARIABLE '(' arrayIndexList ')';
 
 // Function arguments
 argumentList: expression (',' expression)*;

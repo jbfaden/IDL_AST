@@ -2,7 +2,8 @@
 Java-based IDL syntax parser
 
 # Assumptions
-This assumes you are on a Linux machine with antlr4 installed.
+This assumes you are on a Linux machine with antlr4 installed.  Java 17 is
+used for compiling and running codes.
 
 # Instructions
 * git clone git@github.com:jbfaden/IDL_AST.git

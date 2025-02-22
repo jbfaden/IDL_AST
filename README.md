@@ -12,3 +12,8 @@ This assumes you are on a Linux machine with antlr4 installed.
 * javac -cp .:../lib/antlr-4.13.2-complete.jar *.java
 * java  -cp .:../lib/antlr-4.13.2-complete.jar IDLParserDemo
 
+# more fun:
+
+## visualize the tree
+cat SpxMMSwlabels.pro | java -cp .:../lib/antlr-4.13.2-complete.jar org.antlr.v4.gui.TestRig IDL program -gui
+

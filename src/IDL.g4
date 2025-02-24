@@ -23,13 +23,24 @@ statement
     | ';'
     ;
 
-returnStatement: 'RETURN' argumentList? ;
+returnStatement: 'RETURN' ( ',' argumentList )? ;
 
 assignment: VARIABLE '=' expression | VARIABLE array '=' expression;
 
-functionCallOrArrayAccess: VARIABLE '(' argumentList? ')' ;
+functionCallOrArrayAccess: VARIABLE '(' functionOrProcedureCallArgumentList? ')';
 
+functionOrProcedureCallArgumentList:
+    functionOrProcedureCallArgument (',' functionOrProcedureCallArgument )*;
+
+functionOrProcedureCallArgument:
+    expression | keywordArgument;
+    
 procedureCall: VARIABLE ',' argumentList?  ;
+    
+argumentDeclaration: ( VARIABLE | keywordDeclaration ) ( ',' ( VARIABLE  | keywordDeclaration ) )* ;
+
+keywordDeclaration:
+    VARIABLE '=' VARIABLE;
 
 loopStatement : forStatement | whileStatement;
     
@@ -43,12 +54,12 @@ endwhile:
     'END' | 'ENDWHILE';
 
 whileStatement :
-    'WHILE' '(' expression ')' 'DO' 'BEGIN' NL statementBlock endwhile;
+    'WHILE' expression 'DO' 'BEGIN' NL statementBlock endwhile;
 
 
 conditionalStatement
-    : 'IF' '(' expression ')' 'THEN' statement ( 'ELSE' statement ) 
-    | 'IF' '(' expression ')' 'THEN' 'BEGIN' NL 
+    : 'IF' expression 'THEN' statement ( 'ELSE' statement ) 
+    | 'IF' expression 'THEN' 'BEGIN' NL 
             statementBlock 
       'ENDIF' ('ELSE' 'BEGIN' NL statementBlock 'ENDELSE')?
     ;
@@ -77,7 +88,8 @@ expression
 
 expressionList : expression ( ',' expression )* ;
     
-argumentDeclaration: VARIABLE ( ',' VARIABLE )* ;
+keywordArgument:
+    VARIABLE '=' expression | '/' VARIABLE;
 
 arrayAccessExpr: VARIABLE '[' arrayIndexList ']' | VARIABLE '(' arrayIndexList ')';
 
